@@ -1,8 +1,10 @@
 import React from "react"
 import { useState } from "react"
 import { User, Phone, MapPin, Upload, ArrowLeft, Check, Warehouse, Camera } from 'lucide-react'
+import { useNavigate } from "react-router-dom"
 
 export default function FarmerRegistration() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     farmerName: "",
     gender: "",
@@ -219,9 +221,12 @@ export default function FarmerRegistration() {
       <div className="w-full max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <button className="flex items-center text-green-600 hover:text-green-700 mb-4">
+          <button 
+            onClick={() => navigate('/')}
+            className="flex items-center text-green-600 hover:text-green-700 mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
+            Back
           </button>
           
           <div className="text-center">

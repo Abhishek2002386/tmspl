@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Wheat, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function AgriHouseLogin() {
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [hovered, setHovered] = useState("");
+  const navigate = useNavigate();
 
   const handleSendOtp = async () => {
     if (mobile.length === 10) {
@@ -57,7 +59,8 @@ export default function AgriHouseLogin() {
         if (response.ok) {
           console.log('Login successful:', data);
           alert("Login successful!");
-          // You can add navigation here using useNavigate
+          // Navigate to home page after successful login
+          navigate('/home');
         } else {
           console.error('Login failed:', data);
           alert(data.message || "Login failed");
@@ -67,6 +70,7 @@ export default function AgriHouseLogin() {
         // For testing in Network tab
         if (otp === '123456') {
           alert("Test Mode: Login successful!");
+          navigate('/home');
         } else {
           alert("Test Mode: Invalid OTP. Use '123456' for testing.");
         }
@@ -154,6 +158,7 @@ export default function AgriHouseLogin() {
         <div className="flex justify-center space-x-4 mb-4 mt-8">
           {/* Farmer Button */}
           <button
+            onClick={() => navigate('/farmer-registration')}
             onMouseEnter={() => setHovered("farmer")}
             onMouseLeave={() => setHovered("")}
             className="flex-1 border border-green-600 text-green-700 px-4 py-2 rounded-md hover:bg-green-100 transition flex items-center justify-center"
@@ -163,6 +168,7 @@ export default function AgriHouseLogin() {
 
           {/* Buyer Button */}
           <button
+            onClick={() => navigate('/buyer-registration')}
             onMouseEnter={() => setHovered("buyer")}
             onMouseLeave={() => setHovered("")}
             className="flex-1 border border-green-600 text-green-700 px-4 py-2 rounded-md hover:bg-blue-100 transition flex items-center justify-center"

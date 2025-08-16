@@ -2,8 +2,10 @@
 import React from "react"
 import { useState } from "react"
 import { User, Phone, MapPin, Upload, ArrowLeft, ShoppingCart, Building2, Camera } from 'lucide-react'
+import { useNavigate } from "react-router-dom"
 
 export default function BuyerRegistration() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     buyerName: "",
     gender: "",
@@ -155,9 +157,12 @@ export default function BuyerRegistration() {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <button className="flex items-center text-green-600 hover:text-green-700 mb-4">
+          <button 
+            onClick={() => navigate('/')}
+            className="flex items-center text-green-600 hover:text-green-700 mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
+            Back
           </button>
           
           <div className="text-center">

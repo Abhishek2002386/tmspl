@@ -4,23 +4,22 @@ import Login from "./Components/Login/Login"
 import FarmerRegistration from "./Components/Regestration/FarmerRegistration"
 import BuyerRegistration from "./Components/Regestration/BuyerRegistration"
 import HomePage from "./Components/Homepage/HomePage";
+import { LocationProvider } from "./Components/context/LocationContext"
 
 function App() {
   return (
-    <BrowserRouter>
-      
-        
+    <LocationProvider>
+      <BrowserRouter>
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/farmer-registration" element={<FarmerRegistration />} />
             <Route path="/buyer-registration" element={<BuyerRegistration />} />
           </Routes>
         </div>
-       
-    
-    </BrowserRouter>
+      </BrowserRouter>
+    </LocationProvider>
   )
 }
 export default App
