@@ -4,6 +4,8 @@ import { MapPin, Navigation, RotateCcw, Maximize2, Radio, RefreshCw, Map as MapI
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocationContext } from '../../context/LocationContext';
+import NearbyUsersMarkers from './NearbyUsersMarkers';
+import dataService from '../../services/dataService';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -113,6 +115,8 @@ const Map = () => {
   const [mapType, setMapType] = useState('Map'); // 'Map' or 'Satellite'
   const [mapRef, setMapRef] = useState(null);
   const [currentSearchRadius, setCurrentSearchRadius] = useState(3000); // Default 3km
+  const [currentUser, setCurrentUser] = useState(null);
+  const [nearbyUsersCount, setNearbyUsersCount] = useState(0);
 
   // Get context data
   const {
@@ -120,6 +124,17 @@ const Map = () => {
     searchLocation,
     searchRadius
   } = useLocationContext();
+
+  // Get current user on component mount
+  useEffect(() => {
+    const user = dataService.getCurrentUser();
+    setCurrentUser(user);
+  }, []);
+
+  // Handle nearby users count update
+  const handleUsersUpdate = (count) => {
+    setNearbyUsersCount(count);
+  };
 
   // Central location priority management
   useEffect(() => {
@@ -382,7 +397,20 @@ const Map = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b bg-white">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Available (0)</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {currentUser ? (
+              currentUser.userType === 'farmer' 
+                ? `Available Buyers (${nearbyUsersCount})`
+                : `Available Farmers (${nearbyUsersCount})`
+            ) : (
+              `Available (${nearbyUsersCount})`
+            )}
+          </h2>
+          {currentUser && (
+            <p className="text-sm text-gray-500">
+              Within {(currentSearchRadius / 1000).toFixed(1)}km radius
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <button 
@@ -449,6 +477,11 @@ const Map = () => {
             )}
             <LocationMarker />
             <SearchLocationMarker />
+            <NearbyUsersMarkers 
+              userLocation={userLocation} 
+              searchRadius={currentSearchRadius}
+              onUsersUpdate={handleUsersUpdate}
+            />
           </MapContainer>
         </div>
 

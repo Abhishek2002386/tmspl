@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, MapPin, Target, Sliders, ChevronUp, X } from 'lucide-react';
-import { useLocationContext } from '../../context/LocationContext.jsx';
+import { useLocationContext } from '../../context/LocationContext';
 
 const FiltersComponent = ({ isMobile = false }) => {
   const [pincode, setPincode] = useState('');

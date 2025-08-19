@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, RefreshCw, Bell, User } from 'lucide-react';
-import { useLocationContext } from '../context/LocationContext.jsx';
+import { MapPin, RefreshCw, Bell, User, LogOut } from 'lucide-react';
+import { useLocationContext } from '../../context/LocationContext.jsx';
+import dataService from '../../services/dataService.js';
 
 const LocationNavbar = () => {
   const [currentLocation, setCurrentLocation] = useState('');
   const [isLocationActive, setIsLocationActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   // Get context functions
   const { handleLocationUpdate } = useLocationContext();
@@ -216,6 +219,24 @@ const LocationNavbar = () => {
     getCurrentLocation();
   }, []);
 
+  // Check for logged-in user on mount
+  useEffect(() => {
+    const user = dataService.getCurrentUser();
+    setCurrentUser(user);
+  }, []);
+
+  // Close profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileMenu && !event.target.closest('.profile-menu-container')) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showProfileMenu]);
+
   // Listen for GPS location requests from filter
   useEffect(() => {
     const handleGPSRequest = () => {
@@ -229,37 +250,51 @@ const LocationNavbar = () => {
     };
   }, []);
 
+  // Handle logout
+  const handleLogout = () => {
+    dataService.logout();
+    setCurrentUser(null);
+    setShowProfileMenu(false);
+    window.location.href = '/'; // Redirect to login page
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   return (
-    <div className="bg-white shadow-sm border-b border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-3">
+    <div className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="flex items-center justify-between py-2 sm:py-3">
           
           {/* Location Section */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
             <button
               onClick={getCurrentLocation}
               disabled={isLoading}
-              className="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+              className="flex items-center gap-1 sm:gap-2 hover:bg-gray-50 rounded-lg p-1.5 sm:p-2 transition-colors min-w-0 flex-1"
             >
               {isLoading ? (
-                <RefreshCw className="h-5 w-5 text-red-500 animate-spin" />
+                <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 animate-spin flex-shrink-0" />
               ) : (
-                <MapPin className="h-5 w-5 text-red-500" />
+                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 flex-shrink-0" />
               )}
               
-              <div className="text-left">
+              <div className="text-left min-w-0 flex-1">
                 <p className="text-xs text-gray-500 font-medium">Your Location</p>
-                <p className="text-sm font-semibold text-gray-900 max-w-48 truncate">
+                <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
                   {currentLocation || 'Tap to get location'}
                 </p>
               </div>
             </button>
 
-            {/* Refresh Button */}
+            {/* Refresh Button - Hidden on very small screens */}
             {!isLoading && currentLocation && (
               <button
                 onClick={getCurrentLocation}
-                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                className="hidden sm:block p-1.5 hover:bg-gray-100 rounded-full transition-colors"
                 title="Refresh location"
               >
                 <RefreshCw className="h-4 w-4 text-gray-400" />
@@ -268,19 +303,62 @@ const LocationNavbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-3">
-            {/* Notification */}
-            <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Bell className="h-5 w-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+          <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+            {/* Notification - Hidden on very small screens */}
+            <button className="hidden sm:flex relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 sm:h-4 sm:w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 2
               </span>
             </button>
 
-            {/* Profile */}
-            <button className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium hover:bg-blue-600 transition-colors">
-              NS
-            </button>
+            {/* Profile Section */}
+            {currentUser ? (
+              <div className="relative profile-menu-container">
+                <button 
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-medium">
+                    {getUserInitials(currentUser.farmerName || currentUser.buyerName || 'User')}
+                  </div>
+                  <div className="text-left hidden md:block">
+                    <p className="text-xs text-gray-500 font-medium">Welcome</p>
+                    <p className="text-sm font-semibold text-gray-900 max-w-20 truncate">
+                      {currentUser.farmerName || currentUser.buyerName}
+                    </p>
+                  </div>
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {showProfileMenu && (
+                  <div className="absolute right-0 top-full mt-1 w-48 sm:w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-3 border-b border-gray-100">
+                      <p className="font-semibold text-gray-900 text-sm">
+                        {currentUser.farmerName || currentUser.buyerName}
+                      </p>
+                      <p className="text-sm text-gray-500">{currentUser.mobileNumber}</p>
+                      <p className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded mt-1 inline-block">
+                        {currentUser.userType === 'farmer' ? '🌾 Farmer' : '🛒 Buyer'}
+                      </p>
+                    </div>
+                    <div className="p-2">
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center">
+                <User className="h-3 w-3 sm:h-4 sm:w-4" />
+              </div>
+            )}
           </div>
         </div>
 
