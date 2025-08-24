@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "agrihouse-registration-api",
+		"name": "AgriHouse Registration API",
+		"description": "Complete API collection for testing AgriHouse farmer and buyer registration with OTP verification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Farmer Registration Flow",
+			"item": [
+				{
+					"name": "1. Send OTP for Farmer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/farmer/send-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"farmer",
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Verify OTP for Farmer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/farmer/verify-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"farmer",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Register Farmer (with files)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "farmerName",
+									"value": "John Farmer",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "9876543210",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "john@farmer.com",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "Punjab",
+									"type": "text"
+								},
+								{
+									"key": "district",
+									"value": "Ludhiana",
+									"type": "text"
+								},
+								{
+									"key": "subDistrict",
+									"value": "Ludhiana",
+									"type": "text"
+								},
+								{
+									"key": "village",
+									"value": "Village 1",
+									"type": "text"
+								},
+								{
+									"key": "pinCode",
+									"value": "141001",
+									"type": "text"
+								},
+								{
+									"key": "totalLandBigha",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "harvestingLandBigha",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "agreeTerms",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "profilePhoto",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "aadharCard",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/farmer/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"farmer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Buyer Registration Flow",
+			"item": [
+				{
+					"name": "1. Send OTP for Buyer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"9876543211\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/buyer/send-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"buyer",
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Verify OTP for Buyer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"9876543211\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/buyer/verify-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"buyer",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Register Buyer (with files)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "buyerName",
+									"value": "Jane Buyer",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "female",
+									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "9876543211",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jane@buyer.com",
+									"type": "text"
+								},
+								{
+									"key": "businessName",
+									"value": "ABC Trading",
+									"type": "text"
+								},
+								{
+									"key": "businessType",
+									"value": "Wholesaler",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "123 Main Street",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "Delhi",
+									"type": "text"
+								},
+								{
+									"key": "district",
+									"value": "New Delhi",
+									"type": "text"
+								},
+								{
+									"key": "subDistrict",
+									"value": "Central Delhi",
+									"type": "text"
+								},
+								{
+									"key": "village",
+									"value": "Connaught Place",
+									"type": "text"
+								},
+								{
+									"key": "pinCode",
+									"value": "110001",
+									"type": "text"
+								},
+								{
+									"key": "agreeTerms",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "profilePhoto",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "panCard",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/buyer/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"buyer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Error Testing",
+			"item": [
+				{
+					"name": "Invalid Mobile Number",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/farmer/send-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"farmer",
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Required Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mobileNumber\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/api/farmer/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"api",
+								"farmer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3002",
+			"type": "string"
+		}
+	]
+}
